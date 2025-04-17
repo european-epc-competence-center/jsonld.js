@@ -1815,6 +1815,451 @@ _:b0 <ex:p> "[null]"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON> .
       });
     });
 
+    it('should emit for @graph with empty object (1)', async () => {
+      const input =
+{
+  "@context": {
+    "p": {
+      "@id": "urn:p",
+      "@type": "@id",
+      "@container": "@graph"
+    }
+  },
+  "@id": "urn:id",
+  "p": {}
+}
+;
+      const expected = [];
+
+      await _test({
+        type: 'expand',
+        input,
+        expected,
+        eventCodeLog: [
+          'empty object',
+          'object with only @id'
+        ],
+        testNotSafe: true
+      });
+    });
+
+    it('should emit for ok @graph with empty object (2)', async () => {
+      const input =
+{
+  "@context": {
+    "p": {
+      "@id": "urn:p",
+      "@type": "@id",
+      "@container": "@graph"
+    },
+    "urn:t": {
+      "@type": "@id"
+    }
+  },
+  "@id": "urn:id",
+  "urn:t": "urn:id",
+  "p": {}
+}
+;
+      const expected =
+[
+  {
+    "@id": "urn:id",
+    "urn:t": [
+      {
+        "@id": "urn:id"
+      }
+    ]
+  }
+]
+;
+
+      await _test({
+        type: 'expand',
+        input,
+        expected,
+        eventCodeLog: [
+          'empty object'
+        ],
+        testNotSafe: true
+      });
+    });
+
+    it('should emit with only @id and @graph with empty array', async () => {
+      const input =
+{
+  "@context": {
+    "p": {
+      "@id": "urn:p",
+      "@type": "@id",
+      "@container": "@graph"
+    }
+  },
+  "@id": "urn:id",
+  "p": []
+}
+;
+      const expected = [];
+
+      await _test({
+        type: 'expand',
+        input,
+        expected,
+        eventCodeLog: [
+          'object with only @id'
+        ],
+        testNotSafe: true
+      });
+    });
+
+    it('should not emit for @graph with empty array', async () => {
+      const input =
+{
+  "@context": {
+    "p": {
+      "@id": "urn:p",
+      "@type": "@id",
+      "@container": "@graph"
+    },
+    "urn:t": {
+      "@type": "@id"
+    }
+  },
+  "@id": "urn:id",
+  "urn:t": "urn:id",
+  "p": []
+}
+;
+      const expected =
+[
+  {
+    "@id": "urn:id",
+    "urn:t": [
+      {
+        "@id": "urn:id"
+      }
+    ]
+  }
+]
+;
+
+      await _test({
+        type: 'expand',
+        input,
+        expected,
+        eventCodeLog: []
+      });
+    });
+
+    it('should emit for @graph with only @id (1)', async () => {
+      const input =
+{
+  "@context": {
+    "p": {
+      "@id": "urn:p",
+      "@type": "@id",
+      "@container": "@graph"
+    }
+  },
+  "@id": "urn:id",
+  "p": ["urn:id0"]
+}
+;
+      const expected = [];
+
+      await _test({
+        type: 'expand',
+        input,
+        expected,
+        eventCodeLog: [
+          'object with only @id',
+          'object with only @id'
+        ],
+        testNotSafe: true
+      });
+    });
+
+    it('should emit for @graph with only @id (2)', async () => {
+      const input =
+{
+  "@context": {
+    "p": {
+      "@id": "urn:p",
+      "@type": "@id",
+      "@container": "@graph"
+    }
+  },
+  "@id": "urn:id",
+  "p": [
+    "urn:id0",
+    "urn:id1"
+  ]
+}
+;
+      const expected = [];
+
+      await _test({
+        type: 'expand',
+        input,
+        expected,
+        eventCodeLog: [
+          'object with only @id',
+          'object with only @id',
+          'object with only @id'
+        ],
+        testNotSafe: true
+      });
+    });
+
+    it('should emit for @graph with only @id (3)', async () => {
+      const input =
+{
+  "@context": {
+    "p": {
+      "@id": "urn:p",
+      "@type": "@id",
+      "@container": "@graph"
+    }
+  },
+  "@id": "urn:g0",
+  "p": [
+    {
+      "@id": "urn:id0",
+      "urn:p0": "v0"
+    },
+    "urn:id1"
+  ]
+}
+;
+      const expected =
+[
+  {
+    "@id": "urn:g0",
+    "urn:p": [
+      {
+        "@graph": [
+          {
+            "@id": "urn:id0",
+            "urn:p0": [
+              {
+                "@value": "v0"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
+;
+
+      await _test({
+        type: 'expand',
+        input,
+        expected,
+        eventCodeLog: [
+          'object with only @id'
+        ],
+        testNotSafe: true
+      });
+    });
+
+    it('should emit for @graph with only @id (4)', async () => {
+      const input =
+{
+  "@context": {
+    "p": {
+      "@id": "urn:p",
+      "@type": "@id",
+      "@container": "@graph"
+    }
+  },
+  "@id": "urn:g0",
+  "p": [
+    "urn:id0",
+    {
+      "@id": "urn:id1",
+      "urn:p1": "v1"
+    }
+  ]
+}
+;
+      const expected =
+[
+  {
+    "@id": "urn:g0",
+    "urn:p": [
+      {
+        "@graph": [
+          {
+            "@id": "urn:id1",
+            "urn:p1": [
+              {
+                "@value": "v1"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
+;
+
+      await _test({
+        type: 'expand',
+        input,
+        expected,
+        eventCodeLog: [
+          'object with only @id'
+        ],
+        testNotSafe: true
+      });
+    });
+
+    it('should emit for @graph with only @id (5)', async () => {
+      const input =
+{
+  "@context": {
+    "p": {
+      "@id": "urn:p",
+      "@type": "@id",
+      "@container": "@graph"
+    },
+    "urn:t": {
+      "@type": "@id"
+    }
+  },
+  "@id": "urn:id",
+  "urn:t": "urn:id",
+  "p": ["urn:id0"]
+}
+;
+      const expected =
+[
+  {
+    "@id": "urn:id",
+    "urn:t": [
+      {
+        "@id": "urn:id"
+      }
+    ]
+  }
+]
+;
+
+      await _test({
+        type: 'expand',
+        input,
+        expected,
+        eventCodeLog: [
+          'object with only @id',
+        ],
+        testNotSafe: true
+      });
+    });
+
+    it('should emit for @graph with only @id (6)', async () => {
+      const input =
+{
+  "@context": {
+    "p": {
+      "@id": "urn:p",
+      "@type": "@id",
+      "@container": "@graph"
+    },
+    "urn:t": {
+      "@type": "@id"
+    }
+  },
+  "@id": "urn:id",
+  "urn:t": "urn:id",
+  "p": "urn:id0"
+}
+;
+      const expected =
+[
+  {
+    "@id": "urn:id",
+    "urn:t": [
+      {
+        "@id": "urn:id"
+      }
+    ]
+  }
+]
+;
+
+      await _test({
+        type: 'expand',
+        input,
+        expected,
+        eventCodeLog: [
+          'object with only @id',
+        ],
+        testNotSafe: true
+      });
+    });
+
+    it('should emit for @graph with relative @id (7)', async () => {
+      const input =
+{
+  "@context": {
+    "p": {
+      "@id": "urn:p",
+      "@type": "@id",
+      "@container": "@graph"
+    },
+    "urn:t": {
+      "@type": "@id"
+    }
+  },
+  "@id": "urn:id",
+  "urn:t": "urn:id",
+  "p": {
+    "@id": "rel",
+    "urn:t": "urn:id0"
+  }
+}
+;
+      const expected =
+[
+  {
+    "@id": "urn:id",
+    "urn:t": [
+      {
+        "@id": "urn:id"
+      }
+    ],
+    "urn:p": [
+      {
+        "@graph": [
+          {
+            "@id": "rel",
+            "urn:t": [
+              {
+                "@id": "urn:id0"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
+;
+
+      await _test({
+        type: 'expand',
+        input,
+        expected,
+        eventCodeLog: [
+          'relative @id reference',
+        ],
+        testNotSafe: true
+      });
+    });
+
     it('should emit for null @value', async () => {
       const input =
 {
@@ -2366,6 +2811,37 @@ _:b0 <ex:p> "[null]"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON> .
           //// .. 'relativeiri'
           'relative @id reference'
           // .. 'relativeiri'
+        ],
+        testNotSafe: true
+      });
+    });
+
+    it('should be called on relative IRI for id term [4]', async () => {
+      const input =
+{
+  "@id": "34:relativeiri",
+  "urn:test": "value"
+}
+;
+      const expected =
+[
+  {
+    "@id": "34:relativeiri",
+    "urn:test": [
+      {
+        "@value": "value"
+      }
+    ]
+  }
+]
+;
+
+      await _test({
+        type: 'expand',
+        input,
+        expected,
+        eventCodeLog: [
+          'relative @id reference'
         ],
         testNotSafe: true
       });
@@ -3155,6 +3631,72 @@ _:b0 <ex:p> "[null]"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON> .
     });
   });
 
+  // inputs/outputs for @direction+rdfDirection fromRDF/toRDF tests
+  const _json_dir_nl_nd =
+[
+  {
+    "@id": "urn:id",
+    "ex:p": [
+      {
+        "@value": "v"
+      }
+    ]
+  }
+]
+;
+  const _json_dir_nl_d =
+[
+  {
+    "@id": "urn:id",
+    "ex:p": [
+      {
+        "@direction": "ltr",
+        "@value": "v"
+      }
+    ]
+  }
+]
+;
+  const _json_dir_l_nd =
+[
+  {
+    "@id": "urn:id",
+    "ex:p": [
+      {
+        "@language": "en-us",
+        "@value": "v"
+      }
+    ]
+  }
+]
+;
+  const _json_dir_l_d =
+[
+  {
+    "@id": "urn:id",
+    "ex:p": [
+      {
+        "@direction": "ltr",
+        "@language": "en-us",
+        "@value": "v"
+      }
+    ]
+  }
+]
+;
+  const _nq_dir_nl_nd = `\
+<urn:id> <ex:p> "v" .
+`;
+  const _nq_dir_l_nd_ls = `\
+<urn:id> <ex:p> "v"@en-us .
+`;
+  const _nq_dir_nl_d_i18n = `\
+<urn:id> <ex:p> "v"^^<https://www.w3.org/ns/i18n#_ltr> .
+`;
+  const _nq_dir_l_d_i18n = `\
+<urn:id> <ex:p> "v"^^<https://www.w3.org/ns/i18n#en-us_ltr> .
+`;
+
   describe('fromRDF', () => {
     it('should emit for invalid N-Quads @language value', async () => {
       // N-Quads with invalid language tag (too long)
@@ -3246,6 +3788,79 @@ _:b0 <ex:p> "[null]"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON> .
           'invalid @language value'
         ],
         testNotSafe: true
+      });
+    });
+
+    // 'should handle [no] @lang, [no] @dir, rdfDirection=null'
+    // no tests due to no special N-Quads handling
+
+    // other tests only check that rdfDirection type of input
+    // tests mixing rdfDirection formats not tested
+
+    it('should handle no @lang, no @dir, rdfDirection=i18n', async () => {
+      const input = _nq_dir_nl_nd;
+      const expected = _json_dir_nl_nd;
+
+      await _test({
+        type: 'fromRDF',
+        input,
+        options: {skipExpansion: true, rdfDirection: 'i18n-datatype'},
+        expected,
+        eventCodeLog: [],
+        testSafe: true
+      });
+    });
+
+    it('should handle no @lang, @dir, rdfDirection=i18n', async () => {
+      const input = _nq_dir_nl_d_i18n;
+      const expected = _json_dir_nl_d;
+
+      await _test({
+        type: 'fromRDF',
+        input,
+        options: {skipExpansion: true, rdfDirection: 'i18n-datatype'},
+        expected,
+        eventCodeLog: [],
+        testSafe: true
+      });
+    });
+
+    it('should handle @lang, no @dir, rdfDirection=i18n', async () => {
+      const input = _nq_dir_l_nd_ls;
+      const expected = _json_dir_l_nd;
+
+      await _test({
+        type: 'fromRDF',
+        input,
+        options: {skipExpansion: true, rdfDirection: 'i18n-datatype'},
+        expected,
+        eventCodeLog: [],
+        testSafe: true
+      });
+    });
+
+    it('should handle @lang, @dir, rdfDirection=i18n', async () => {
+      const input = _nq_dir_l_d_i18n;
+      const expected = _json_dir_l_d;
+
+      await _test({
+        type: 'fromRDF',
+        input,
+        options: {skipExpansion: true, rdfDirection: 'i18n-datatype'},
+        expected,
+        eventCodeLog: [],
+        testSafe: true
+      });
+    });
+
+    it('should handle bad rdfDirection', async () => {
+      const input = _nq_dir_l_d_i18n;
+
+      await _test({
+        type: 'fromRDF',
+        input,
+        options: {skipExpansion: true, rdfDirection: 'bogus'},
+        exception: 'jsonld.InvalidRdfDirection'
       });
     });
   });
@@ -3452,6 +4067,208 @@ _:b0 <ex:p> "v" .
         type: 'toRDF',
         input,
         options: {skipExpansion: true},
+        expected: nq,
+        eventCodeLog: [],
+        testSafe: true
+      });
+    });
+
+    it('should handle no @lang, no @dir, rdfDirection=null', async () => {
+      const input = _json_dir_nl_nd;
+      const nq = _nq_dir_nl_nd;
+
+      await _test({
+        type: 'toRDF',
+        input,
+        options: {skipExpansion: true, rdfDirection: null},
+        expected: nq,
+        eventCodeLog: [],
+        testSafe: true
+      });
+    });
+
+    it('should handle no @lang, no @dir, rdfDirection=i18n', async () => {
+      const input = _json_dir_nl_nd;
+      const nq = _nq_dir_nl_nd;
+
+      await _test({
+        type: 'toRDF',
+        input,
+        options: {skipExpansion: true, rdfDirection: 'i18n-datatype'},
+        expected: nq,
+        eventCodeLog: [],
+        testSafe: true
+      });
+    });
+
+    it('should handle no @lang, @dir, no rdfDirection', async () => {
+      const input = _json_dir_nl_d;
+      const nq = _nq_dir_nl_nd;
+
+      await _test({
+        type: 'toRDF',
+        input,
+        options: {skipExpansion: true},
+        expected: nq,
+        eventCodeLog: [
+          'rdfDirection not set'
+        ],
+        testNotSafe: true
+      });
+    });
+
+    it('should handle no @lang, @dir, rdfDirection=null', async () => {
+      const input = _json_dir_nl_d;
+      const nq = _nq_dir_nl_nd;
+
+      await _test({
+        type: 'toRDF',
+        input,
+        options: {skipExpansion: true, rdfDirection: null},
+        expected: nq,
+        eventCodeLog: [
+          'rdfDirection not set'
+        ],
+        testNotSafe: true
+      });
+    });
+
+    it('should handle no @lang, @dir, rdfDirection=i18n', async () => {
+      const input = _json_dir_nl_d;
+      const nq = _nq_dir_nl_d_i18n;
+
+      await _test({
+        type: 'toRDF',
+        input,
+        options: {skipExpansion: true, rdfDirection: 'i18n-datatype'},
+        expected: nq,
+        eventCodeLog: [],
+        testSafe: true
+      });
+    });
+
+    it('should handle @lang, no @dir, rdfDirection=null', async () => {
+      const input = _json_dir_l_nd;
+      const nq = _nq_dir_l_nd_ls;
+
+      await _test({
+        type: 'toRDF',
+        input,
+        options: {skipExpansion: true, rdfDirection: null},
+        expected: nq,
+        eventCodeLog: [],
+        testSafe: true
+      });
+    });
+
+    it('should handle @lang, no @dir, rdfDirection=i18n', async () => {
+      const input = _json_dir_l_nd;
+      const nq = _nq_dir_l_nd_ls;
+
+      await _test({
+        type: 'toRDF',
+        input,
+        options: {skipExpansion: true, rdfDirection: 'i18n-datatype'},
+        expected: nq,
+        eventCodeLog: [],
+        testSafe: true
+      });
+    });
+
+    it('should handle @lang, @dir, rdfDirection=null', async () => {
+      const input = _json_dir_l_d;
+      const nq = _nq_dir_l_nd_ls;
+
+      await _test({
+        type: 'toRDF',
+        input,
+        options: {skipExpansion: true, rdfDirection: null},
+        expected: nq,
+        eventCodeLog: [
+          'rdfDirection not set'
+        ],
+        testNotSafe: true
+      });
+    });
+
+    it('should handle @lang, @dir, rdfDirection=i18n', async () => {
+      const input = _json_dir_l_d;
+      const nq = _nq_dir_l_d_i18n;
+
+      await _test({
+        type: 'toRDF',
+        input,
+        options: {skipExpansion: true, rdfDirection: 'i18n-datatype'},
+        expected: nq,
+        eventCodeLog: [],
+        testSafe: true
+      });
+    });
+
+    it('should handle bad rdfDirection', async () => {
+      const input = _json_dir_l_d;
+
+      await _test({
+        type: 'toRDF',
+        input,
+        options: {skipExpansion: true, rdfDirection: 'bogus'},
+        exception: 'jsonld.InvalidRdfDirection'
+      });
+    });
+
+    /* eslint-disable-next-line */
+    // https://www.w3.org/TR/json-ld/#example-76-expanded-term-definition-with-language-and-direction
+    // simplified complex context example
+    const _ctx_dir_input =
+{
+  "@context": {
+    "@version": 1.1,
+    "@language": "ar-EG",
+    "@direction": "rtl",
+    "ex": "urn:ex:",
+    "publisher": {"@id": "ex:publisher", "@direction": null},
+    "title": {"@id": "ex:title"},
+    "title_en": {"@id": "ex:title", "@language": "en", "@direction": "ltr"}
+  },
+  "publisher": "NULL",
+  "title": "RTL",
+  "title_en": "LTR"
+}
+;
+
+    it('should handle ctx @lang/@dir/rdfDirection=null', async () => {
+      const input = _ctx_dir_input;
+      const nq = `\
+_:b0 <urn:ex:publisher> "NULL"@ar-eg .
+_:b0 <urn:ex:title> "LTR"@en .
+_:b0 <urn:ex:title> "RTL"@ar-eg .
+`;
+
+      await _test({
+        type: 'toRDF',
+        input,
+        options: {skipExpansion: false, rdfDirection: null},
+        expected: nq,
+        eventCodeLog: [
+          'rdfDirection not set',
+          'rdfDirection not set'
+        ],
+        testNotSafe: true
+      });
+    });
+
+    it('should handle ctx @lang/@dir/rdfDirection=i18n', async () => {
+      const input = _ctx_dir_input;
+      const nq = `\
+_:b0 <urn:ex:publisher> "NULL"@ar-eg .
+_:b0 <urn:ex:title> "LTR"^^<https://www.w3.org/ns/i18n#en_ltr> .
+_:b0 <urn:ex:title> "RTL"^^<https://www.w3.org/ns/i18n#ar-eg_rtl> .
+`;
+
+      await _test({
+        type: 'toRDF',
+        input,
+        options: {skipExpansion: false, rdfDirection: 'i18n-datatype'},
         expected: nq,
         eventCodeLog: [],
         testSafe: true

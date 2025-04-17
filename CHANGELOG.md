@@ -1,5 +1,60 @@
 # jsonld ChangeLog
 
+## 8.3.3 - 2024-12-21
+
+### Added
+- Added URL to context resolution error message.
+
+## 8.3.2 - 2023-12-06
+
+### Fixed
+- Fix handling of a `@graph` `@container` term that has a `null` `@context`.
+
+## 8.3.1 - 2023-09-06
+
+### Fixed
+- Handle unset `rdfDirection` the same as `null`.
+
+## 8.3.0 - 2023-09-06
+
+### Added
+- Emit `toRdf` warning if `@direction` is used and `rdfDirection` is not set.
+
+### Fixed
+- Add safe mode support for `@direction`. Using `@direction` without
+  `rdfDirection` set will cause a safe mode failure.
+
+## 8.2.1 - 2023-08-31
+
+### Fixed
+- Fix handling of graph property with empty array.
+- Fix safe mode for `@graph` use cases.
+  - Check all elements of graph property with array.
+- Fix test `pr41` of protected redefinition of equivalent id terms.
+- Fix relative IRI parsing.
+
+## 8.2.0 - 2023-05-19
+
+### Changed
+- Update for latest [rdf-canon][] changes: test suite location, README, links,
+  and identifiers.
+  - Skip test with 'U' escapes. Will enable when [rdf-canonize][] dependency is
+    updated.
+- Test on Node.js 20.x.
+- Align test and benchmark code with [rdf-canonize][].
+  - **NOTE**: This changes various testing and benchmark runner features and
+    options.
+  - Update env var usage.
+  - Use more common code between Node.js and karma tests.
+  - Conditionally load test suites.
+  - Fix various minor bugs.
+  - Add multiple jobs benchmarking support.
+- Update benchmark compare script.
+
+### Fixed
+- Improve safe mode for `@graph` use cases.
+- Fix `@json` frame test 0069.
+
 ## 8.1.1 - 2023-02-25
 
 ### Fixed
@@ -831,5 +886,6 @@
 
 [jsonld-cli]: https://github.com/digitalbazaar/jsonld-cli
 [jsonld-request]: https://github.com/digitalbazaar/jsonld-request
+[rdf-canon]: https://w3c.github.io/rdf-canon/
 [rdf-canonize]: https://github.com/digitalbazaar/rdf-canonize
 [rdf-canonize-native]: https://github.com/digitalbazaar/rdf-canonize-native

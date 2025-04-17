@@ -14,5 +14,7 @@ coverage
 dist
 node_modules
 npm-debug.log
+package-lock.json
 tests/webidl/*-new
 v8.log
+test-suites/

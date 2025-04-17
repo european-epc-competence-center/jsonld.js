@@ -1,9 +1,9 @@
 jsonld.js
 =========
 
-[![Build status](https://img.shields.io/github/workflow/status/digitalbazaar/jsonld.js/Node.js%20CI)](https://github.com/digitalbazaar/jsonld.js/actions?query=workflow%3A%22Node.js+CI%22)
+[![Build status](https://img.shields.io/github/actions/workflow/status/digitalbazaar/jsonld.js/main.yml)](https://github.com/digitalbazaar/jsonld.js/actions/workflows/main.yml)
 [![Coverage status](https://img.shields.io/codecov/c/github/digitalbazaar/jsonld.js)](https://codecov.io/gh/digitalbazaar/jsonld.js)
-[![Dependency Status](https://img.shields.io/david/digitalbazaar/jsonld.js.svg)](https://david-dm.org/digitalbazaar/jsonld.js)
+[![npm](https://img.shields.io/npm/v/jsonld)](https://npm.im/jsonld)
 
 Introduction
 ------------
@@ -206,7 +206,7 @@ const context = {
 };
 ```
 
-### [compact](http://json-ld.org/spec/latest/json-ld/#compacted-document-form)
+### [compact](https://json-ld.org/spec/latest/json-ld/#compacted-document-form)
 
 ```js
 // compact a document according to a particular context
@@ -226,7 +226,7 @@ const compacted = await jsonld.compact(
   'http://example.org/doc', 'http://example.org/context', ...);
 ```
 
-### [expand](http://json-ld.org/spec/latest/json-ld/#expanded-document-form)
+### [expand](https://json-ld.org/spec/latest/json-ld/#expanded-document-form)
 
 ```js
 // expand a document, removing its context
@@ -243,7 +243,7 @@ const expanded = await jsonld.expand(compacted);
 const expanded = await jsonld.expand('http://example.org/doc', ...);
 ```
 
-### [flatten](http://json-ld.org/spec/latest/json-ld/#flattened-document-form)
+### [flatten](https://json-ld.org/spec/latest/json-ld/#flattened-document-form)
 
 ```js
 // flatten a document
@@ -251,7 +251,7 @@ const flattened = await jsonld.flatten(doc);
 // output has all deep-level trees flattened to the top-level
 ```
 
-### [frame](http://json-ld.org/spec/latest/json-ld-framing/#introduction)
+### [frame](https://json-ld.org/spec/latest/json-ld-framing/#introduction)
 
 ```js
 // frame a document
@@ -259,11 +259,11 @@ const framed = await jsonld.frame(doc, frame);
 // output transformed into a particular tree structure per the given frame
 ```
 
-### <a name="canonize"></a>[canonize](http://json-ld.github.io/normalization/spec/) (normalize)
+### <a name="canonize"></a>[canonize](https://w3c.github.io/rdf-canon/spec/) (normalize)
 
 ```js
-// canonize (normalize) a document using the RDF Dataset Normalization Algorithm
-// (URDNA2015), see:
+// canonize (normalize) a document using the RDF Dataset Canonicalization Algorithm
+// (URDNA2015):
 const canonized = await jsonld.canonize(doc, {
   algorithm: 'URDNA2015',
   format: 'application/n-quads'
@@ -364,28 +364,6 @@ The `safe` options flag set to `true` enables this behavior:
 const expanded = await jsonld.expand(data, {safe: true});
 ```
 
-Related Modules
----------------
-
-* [jsonld-cli][]: A command line interface tool called `jsonld` that exposes
-  most of the basic jsonld.js API.
-* [jsonld-request][]: A module that can read data from stdin, URLs, and files
-  and in various formats and return JSON-LD.
-
-Commercial Support
-------------------
-
-Commercial support for this library is available upon request from
-[Digital Bazaar][]: support@digitalbazaar.com
-
-Source
-------
-
-The source code for the JavaScript implementation of the JSON-LD API
-is available at:
-
-http://github.com/digitalbazaar/jsonld.js
-
 Tests
 -----
 
@@ -398,7 +376,7 @@ the following:
     https://github.com/w3c/json-ld-api
     https://github.com/w3c/json-ld-framing
     https://github.com/json-ld/json-ld.org
-    https://github.com/json-ld/normalization
+    https://github.com/w3c/rdf-canon
 
 They should be sibling directories of the jsonld.js directory or in a
 `test-suites` dir. To clone shallow copies into the `test-suites` dir you can
@@ -411,13 +389,13 @@ Node.js tests can be run with a simple command:
     npm test
 
 If you installed the test suites elsewhere, or wish to run other tests, use
-the `JSONLD_TESTS` environment var:
+the `TESTS` environment var:
 
-    JSONLD_TESTS="/tmp/org/test-suites /tmp/norm/tests" npm test
+    TESTS="/tmp/org/test-suites /tmp/norm/tests" npm test
 
 This feature can be used to run the older json-ld.org test suite:
 
-    JSONLD_TESTS=/tmp/json-ld.org/test-suite npm test
+    TESTS=/tmp/json-ld.org/test-suite npm test
 
 Browser testing can be done with Karma:
 
@@ -441,7 +419,7 @@ Remote context tests are also available:
     # run the context server in the background or another terminal
     node tests/remote-context-server.js
 
-    JSONLD_TESTS=`pwd`/tests npm test
+    TESTS=`pwd`/tests npm test
 
 To generate EARL reports:
 
@@ -454,7 +432,7 @@ To generate EARL reports:
 To generate an EARL report with the `json-ld-api` and `json-ld-framing` tests
 as used on the official [JSON-LD Processor Conformance][] page
 
-    JSONLD_TESTS="`pwd`/../json-ld-api/tests `pwd`/../json-ld-framing/tests" EARL="jsonld-js-earl.jsonld" npm test
+    TESTS="`pwd`/../json-ld-api/tests `pwd`/../json-ld-framing/tests" EARL="jsonld-js-earl.jsonld" npm test
 
 The EARL `.jsonld` output can be converted to `.ttl` using the [rdf][] tool:
 
@@ -471,17 +449,39 @@ Benchmarks
 Benchmarks can be created from any manifest that the test system supports.
 Use a command line with a test suite and a benchmark flag:
 
-    JSONLD_TESTS=/tmp/benchmark-manifest.jsonld JSONLD_BENCHMARK=1 npm test
+    TESTS=/tmp/benchmark-manifest.jsonld BENCHMARK=1 npm test
 
 EARL reports with benchmark data can be generated with an optional environment
 details:
 
-    JSONLD_TESTS=`pwd`/../json-ld.org/benchmarks/b001-manifiest.jsonld JSONLD_BENCHMARK=1 EARL=earl-test.jsonld TEST_ENV=1 npm test
+    TESTS=`pwd`/../json-ld.org/benchmarks/b001-manifiest.jsonld BENCHMARK=1 EARL=earl-test.jsonld TEST_ENV=1 npm test
 
-See `tests/test.js` for more `TEST_ENV` control and options.
+See `tests/test.js` for more `TEST_ENV` and `BENCHMARK` control and options.
 
 These reports can be compared with the `benchmarks/compare/` tool and at the
 [JSON-LD Benchmarks][] site.
+
+Related Modules
+---------------
+
+* [jsonld-cli][]: A command line interface tool called `jsonld` that exposes
+  most of the basic jsonld.js API.
+* [jsonld-request][]: A module that can read data from stdin, URLs, and files
+  and in various formats and return JSON-LD.
+
+Source
+------
+
+The source code for the JavaScript implementation of the JSON-LD API
+is available at:
+
+https://github.com/digitalbazaar/jsonld.js
+
+Commercial Support
+------------------
+
+Commercial support for this library is available upon request from
+[Digital Bazaar][]: support@digitalbazaar.com
 
 [Digital Bazaar]: https://digitalbazaar.com/
 
@@ -518,6 +518,7 @@ These reports can be compared with the `benchmarks/compare/` tool and at the
 [errata]: http://www.w3.org/2014/json-ld-errata
 [jsonld-cli]: https://github.com/digitalbazaar/jsonld-cli
 [jsonld-request]: https://github.com/digitalbazaar/jsonld-request
+[rdf]: https://rubygems.org/gems/rdf
 [rdf-canonize-native]: https://github.com/digitalbazaar/rdf-canonize-native
 [test runner]: https://github.com/digitalbazaar/jsonld.js/blob/master/tests/test-common.js
 [test suite]: https://github.com/json-ld/json-ld.org/tree/master/test-suite
